@@ -28,7 +28,7 @@ const Profile: React.FC = () => {
 
   async function handleWrite() {
     const podsUrls: String[] = await getPodUrlAll(session.info.webId, { fetch: session.fetch });
-    const readingListUrl = `${podsUrls[0]}dietary-profile/my-profile`;
+    const readingListUrl = `${podsUrls[0]}public/menus/my-menu1`;
     let myReadingList: SolidDataset;
 
     try {
@@ -48,10 +48,13 @@ const Profile: React.FC = () => {
       }
     }
 
-    let item = createThing({ name: "title" });
-    item = addUrl(item, RDF.type, AS.Article);
+    let item = createThing({ name: "ingredient1" });
     item = addStringNoLocale(item, SCHEMA_INRUPT.name, "allergen1");
     myReadingList = setThing(myReadingList, item);
+
+    let item2 = createThing({ name: "ingredient2" });
+    item2 = addStringNoLocale(item2, SCHEMA_INRUPT.name, "allergen2");
+    myReadingList = setThing(myReadingList, item2);
 
     await saveSolidDatasetAt(
       readingListUrl,
@@ -62,7 +65,7 @@ const Profile: React.FC = () => {
 
   return (
     <>
-      <h1>Welcome to the Solid dietary profile editor</h1>
+      <h1>Welcome to the Solid restaurant menu creator</h1>
       <button onClick={() => handleWrite()}>Write allergen to pod</button>
     </>
   );
