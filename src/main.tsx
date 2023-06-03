@@ -7,7 +7,7 @@ import {
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <SessionProvider sessionId="some-id">
+    <SessionProvider sessionId="some-id-2">
       <App/>
     </SessionProvider>
   </React.StrictMode>
