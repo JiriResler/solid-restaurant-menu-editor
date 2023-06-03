@@ -48,11 +48,16 @@ const Profile: React.FC = () => {
       }
     }
 
-    let item = createThing({ name: "ingredient1" });
-    item = addStringNoLocale(item, SCHEMA_INRUPT.name, "allergen1");
-    myReadingList = setThing(myReadingList, item);
+    let menu1 = createThing({ name: "menu1" });
+    menu1 = addStringNoLocale(menu1, SCHEMA_INRUPT.name, "item1");
+    menu1 = addStringNoLocale(menu1, SCHEMA_INRUPT.name, "item2");
+    myReadingList = setThing(myReadingList, menu1);
 
-    let item2 = createThing({ name: "ingredient2" });
+    let item1 = createThing({ name: "item1" });
+    item1 = addStringNoLocale(item1, SCHEMA_INRUPT.name, "allergen1");
+    myReadingList = setThing(myReadingList, item1);
+
+    let item2 = createThing({ name: "item2" });
     item2 = addStringNoLocale(item2, SCHEMA_INRUPT.name, "allergen2");
     myReadingList = setThing(myReadingList, item2);
 
@@ -66,6 +71,7 @@ const Profile: React.FC = () => {
   return (
     <>
       <h1>Welcome to the Solid restaurant menu creator</h1>
+      <p>Logged in: {session.info.webId}</p>
       <button onClick={() => handleWrite()}>Write allergen to pod</button>
     </>
   );
