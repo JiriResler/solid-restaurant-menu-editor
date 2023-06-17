@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   useSession,
@@ -25,6 +25,23 @@ import { SCHEMA_INRUPT, RDF, AS } from "@inrupt/vocab-common-rdf";
 
 const Profile: React.FC = () => {
   const { session } = useSession();
+
+  const [items, setItems] = useState([
+    {
+      label: "Spicy Chicken Wings",
+      ingredients: ["chicken", "marinade"],
+      allergens: ["soybeans", "milk", "nuts"],
+      diets: [],
+      price: "5€"
+    },
+    {
+      label: "Pizza Margherita",
+      ingredients: ["tomatoes", "mozzarella", "oregano"],
+      allergens: ["gluten", "milk"],
+      diets: ["vegan", "vegetarian"],
+      price: "7€"
+    }
+  ]);
 
   async function handleWrite() {
     const podsUrls: String[] = await getPodUrlAll(session.info.webId, { fetch: session.fetch });
@@ -68,11 +85,57 @@ const Profile: React.FC = () => {
     );
   }
 
+  function addNewItem() {
+    let newItemArray = [];
+
+    for (const item of items) {
+      newItemArray.push(item);
+    }
+
+    newItemArray.push({
+      label: "New item",
+      ingredients: [""],
+      allergens: [""],
+      diets: [""],
+      price: ""
+    })
+
+    setItems(newItemArray);
+  }
+
   return (
     <>
-      <h1>Welcome to the Solid restaurant menu creator</h1>
-      <p>Logged in: {session.info.webId}</p>
-      <button onClick={() => handleWrite()}>Write allergen to pod</button>
+      <h1>Welcome to the Solid restaurant menu maker</h1>
+
+      {/* <button onClick={() => handleWrite()}>Write allergen to pod</button> */}
+      <h3>Creating a new menu</h3>
+      <p>Name</p>
+      <p>Date</p>
+      <button onClick={() => addNewItem()}>Add an item</button>
+
+      <ul>
+        {items.map(item =>
+          <li>
+            {item.label}
+            <ul>
+              <li>
+                Ingredients: {item.ingredients.join(", ")}
+              </li>
+              <li>
+                Allergens: {item.allergens.join(", ")}
+              </li>
+              <li>
+                Diets: {item.diets.join(", ")}
+              </li>
+              <li>
+                Price: {item.price}
+              </li>
+            </ul>
+          </li>
+        )}
+      </ul>
+
+      <button>Save the menu</button>
     </>
   );
 };
