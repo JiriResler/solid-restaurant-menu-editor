@@ -23,25 +23,26 @@ import {
 import { SCHEMA_INRUPT, RDF, AS } from "@inrupt/vocab-common-rdf";
 
 
+// {
+//   label: "Spicy Chicken Wings",
+//   ingredients: ["chicken", "marinade"],
+//   allergens: ["soybeans", "milk", "nuts"],
+//   diets: [],
+//   price: "5€"
+// },
+// {
+//   label: "Pizza Margherita",
+//   ingredients: ["tomatoes", "mozzarella", "oregano"],
+//   allergens: ["gluten", "milk"],
+//   diets: ["vegan", "vegetarian"],
+//   price: "7€"
+// }
+
+
 const Profile: React.FC = () => {
   const { session } = useSession();
 
-  const [items, setItems] = useState([
-    {
-      label: "Spicy Chicken Wings",
-      ingredients: ["chicken", "marinade"],
-      allergens: ["soybeans", "milk", "nuts"],
-      diets: [],
-      price: "5€"
-    },
-    {
-      label: "Pizza Margherita",
-      ingredients: ["tomatoes", "mozzarella", "oregano"],
-      allergens: ["gluten", "milk"],
-      diets: ["vegan", "vegetarian"],
-      price: "7€"
-    }
-  ]);
+  const [items, setItems] = useState([]);
 
   async function handleWrite() {
     const podsUrls: String[] = await getPodUrlAll(session.info.webId, { fetch: session.fetch });
@@ -105,14 +106,47 @@ const Profile: React.FC = () => {
 
   return (
     <>
-      <h1>Welcome to the Solid restaurant menu maker</h1>
+      {/* <h1>Welcome to the Solid restaurant menu maker</h1> */}
 
       {/* <button onClick={() => handleWrite()}>Write allergen to pod</button> */}
       <h3>Creating a new menu</h3>
-      <p>Name</p>
-      <p>Date</p>
+      <input placeholder='Name of menu' />
+      <br />
+      <br />
+      <input placeholder='Date' />
+      <br />
+      <br />
       <button onClick={() => addNewItem()}>Add an item</button>
+      <br /><br />
+      <ul>
+        {items.map(item =>
+          <>
+            <li>
+              <input placeholder='Name of item' />
+              <ul>
+                <li>
+                  <input placeholder='Ingredients' />
+                </li>
+                <li>
+                  <input placeholder='Allergens' />
+                </li>
+                <li>
+                  <input placeholder='Diets' />
+                </li>
+                <li>
+                  <input placeholder='Price' />
+                </li>
+              </ul>
+            </li>
+            <br />
+          </>
+        )}
+      </ul>
 
+      <button>Save the menu</button>
+      <br /><br />
+      
+      <h3>Preview of menu</h3>
       <ul>
         {items.map(item =>
           <li>
@@ -134,8 +168,6 @@ const Profile: React.FC = () => {
           </li>
         )}
       </ul>
-
-      <button>Save the menu</button>
     </>
   );
 };
