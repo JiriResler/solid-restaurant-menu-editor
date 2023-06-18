@@ -44,6 +44,21 @@ const Profile: React.FC = () => {
 
   const [items, setItems] = useState([]);
 
+  // const [item, setItem] = useState({
+  //   label: "",
+  //   ingredients: [],
+  //   allergens: [],
+  //   diets: []
+  // });
+
+  const [menuName, setMenuName] = useState();
+  const [menuDate, setMenuDate] = useState();
+
+  const [itemLabel, setItemLabel] = useState("");
+  const [itemIngredients, setItemIngredients] = useState([]);
+  const [itemAllergens, setItemAllergens] = useState([]);
+  const [itemDiets, setItemDiets] = useState([]);
+
   async function handleWrite() {
     const podsUrls: String[] = await getPodUrlAll(session.info.webId, { fetch: session.fetch });
     const readingListUrl = `${podsUrls[0]}public/menus/my-menu1`;
@@ -94,12 +109,12 @@ const Profile: React.FC = () => {
     }
 
     newItemArray.push({
-      label: "New item",
+      label: itemLabel,
       ingredients: [""],
       allergens: [""],
       diets: [""],
       price: ""
-    })
+    });
 
     setItems(newItemArray);
   }
@@ -109,44 +124,35 @@ const Profile: React.FC = () => {
       {/* <h1>Welcome to the Solid restaurant menu maker</h1> */}
 
       {/* <button onClick={() => handleWrite()}>Write allergen to pod</button> */}
-      <h3>Creating a new menu</h3>
-      <input placeholder='Name of menu' />
+      <h2>Creating a new menu</h2>
+      <input value={menuName} onChange={(e) => setMenuName(e.target.value)} placeholder='Name of menu' />
       <br />
       <br />
       <input placeholder='Date' />
       <br />
       <br />
-      <button onClick={() => addNewItem()}>Add an item</button>
-      <br /><br />
+      <h4>Add a new item</h4>
       <ul>
-        {items.map(item =>
-          <>
-            <li>
-              <input placeholder='Name of item' />
-              <ul>
-                <li>
-                  <input placeholder='Ingredients' />
-                </li>
-                <li>
-                  <input placeholder='Allergens' />
-                </li>
-                <li>
-                  <input placeholder='Diets' />
-                </li>
-                <li>
-                  <input placeholder='Price' />
-                </li>
-              </ul>
-            </li>
-            <br />
-          </>
-        )}
+        <li>
+          <input value={itemLabel} onChange={(e) => setItemLabel(e.target.value)} placeholder='Name' />
+          </li>
+        <li>
+          <input placeholder='Ingredients' />
+        </li>
+        <li>
+          <input placeholder='Allergens' />
+        </li>
+        <li>
+          <input placeholder='Diets' />
+        </li>
+        <li>
+          <input placeholder='Price' />
+        </li>
       </ul>
-
-      <button>Save the menu</button>
+      <button onClick={() => addNewItem()}>Add item</button>
       <br /><br />
-      
-      <h3>Preview of menu</h3>
+
+      <h3>Preview of the menu</h3>
       <ul>
         {items.map(item =>
           <li>
@@ -168,6 +174,11 @@ const Profile: React.FC = () => {
           </li>
         )}
       </ul>
+
+      <button>Save the menu</button>
+
+      {/* <textarea value={textInput} onChange={(e) => setTextInput(e.target.value)} />
+      {textInput} */}
     </>
   );
 };
