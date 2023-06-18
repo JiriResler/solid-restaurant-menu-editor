@@ -56,8 +56,10 @@ const Profile: React.FC = () => {
 
   const [itemLabel, setItemLabel] = useState("");
   const [itemIngredients, setItemIngredients] = useState([]);
+  const [ingredient, setIngredient] = useState("");
   const [itemAllergens, setItemAllergens] = useState([]);
   const [itemDiets, setItemDiets] = useState([]);
+  const [itemPrice, setItemPrice] = useState("");
 
   async function handleWrite() {
     const podsUrls: String[] = await getPodUrlAll(session.info.webId, { fetch: session.fetch });
@@ -108,15 +110,40 @@ const Profile: React.FC = () => {
       newItemArray.push(item);
     }
 
+    
+
     newItemArray.push({
       label: itemLabel,
-      ingredients: [""],
-      allergens: [""],
-      diets: [""],
-      price: ""
+      ingredients: [itemIngredients],
+      allergens: [itemAllergens],
+      diets: [itemDiets],
+      price: itemPrice
     });
 
     setItems(newItemArray);
+
+    alert(itemLabel + ' added to the menu.');
+
+    // Clear fields
+    setItemLabel("");
+    setItemIngredients([]);
+    setItemAllergens([]);
+    setItemDiets([]);
+    setItemPrice("");
+  }
+
+  function addIngredient() {
+    let newIngredientArray = [];
+
+    for (const ingredient of itemIngredients) {
+      newIngredientArray.push(ingredient);
+    }
+
+    newIngredientArray.push(ingredient);
+
+    setItemIngredients(newIngredientArray);
+
+    setIngredient("");
   }
 
   return (
@@ -125,9 +152,7 @@ const Profile: React.FC = () => {
 
       {/* <button onClick={() => handleWrite()}>Write allergen to pod</button> */}
       <h2>Creating a new menu</h2>
-      <input value={menuName} onChange={(e) => setMenuName(e.target.value)} placeholder='Name of menu' />
-      <br />
-      <br />
+      <input value={menuName} onChange={(e) => setMenuName(e.target.value)} placeholder='Name of the menu' />{' '}
       <input placeholder='Date' />
       <br />
       <br />
@@ -135,18 +160,22 @@ const Profile: React.FC = () => {
       <ul>
         <li>
           <input value={itemLabel} onChange={(e) => setItemLabel(e.target.value)} placeholder='Name' />
-          </li>
-        <li>
-          <input placeholder='Ingredients' />
         </li>
         <li>
-          <input placeholder='Allergens' />
+          <input value={ingredient} onChange={(e) => setIngredient(e.target.value)} placeholder='Ingredient name' /> {' '}
+          <button onClick={() => addIngredient()}>Add ingredient</button>
+          <ul>
+            {itemIngredients.map(ingredient => <li>{ingredient}</li>)}
+          </ul>
         </li>
         <li>
-          <input placeholder='Diets' />
+          <input value={itemAllergens} onChange={(e) => setItemAllergens(e.target.value)} placeholder='Allergens' />
         </li>
         <li>
-          <input placeholder='Price' />
+          <input value={itemDiets} onChange={(e) => setItemDiets(e.target.value)} placeholder='Diets' />
+        </li>
+        <li>
+          <input value={itemPrice} onChange={(e) => setItemPrice(e.target.value)} placeholder='Price' />
         </li>
       </ul>
       <button onClick={() => addNewItem()}>Add item</button>
@@ -176,6 +205,7 @@ const Profile: React.FC = () => {
       </ul>
 
       <button>Save the menu</button>
+      <br /><br />
 
       {/* <textarea value={textInput} onChange={(e) => setTextInput(e.target.value)} />
       {textInput} */}
