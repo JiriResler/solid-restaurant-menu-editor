@@ -217,7 +217,12 @@ const Profile: React.FC = () => {
           </ul>
         </li>
         <li>
-          <input value={itemDiets} onChange={(e) => setItemDiets(e.target.value)} placeholder='Diets' />
+          <input value={diet} onChange={(e) => setDiet(e.target.value)} placeholder='Diet name' />
+          {' '}
+          <button onClick={() => addDiet()}>Add diet</button>
+          <ul>
+            {itemDiets.map(diet => <li>{diet}</li>)}
+          </ul>
         </li>
         <li>
           <input value={itemPrice} onChange={(e) => setItemPrice(e.target.value)} placeholder='Price' />
