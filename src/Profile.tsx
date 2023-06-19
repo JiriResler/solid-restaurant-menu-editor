@@ -40,6 +40,8 @@ import { SCHEMA_INRUPT, RDF, AS } from "@inrupt/vocab-common-rdf";
 
 
 const Profile: React.FC = () => {
+  const chooseWellPrefix = "https://github.com/JiriResler/solid-choose-well-ontology/blob/main/choosewell#";
+
   const { session } = useSession();
 
   const [items, setItems] = useState([]);
@@ -51,8 +53,8 @@ const Profile: React.FC = () => {
   //   diets: []
   // });
 
-  const [menuName, setMenuName] = useState();
-  const [menuDate, setMenuDate] = useState();
+  const [menuName, setMenuName] = useState("");
+  const [menuDate, setMenuDate] = useState("");
 
   const [itemLabel, setItemLabel] = useState("");
   const [itemIngredients, setItemIngredients] = useState([]);
@@ -83,24 +85,32 @@ const Profile: React.FC = () => {
       }
     }
 
-    let menu1 = createThing({ name: "menu1" });
-    menu1 = addStringNoLocale(menu1, SCHEMA_INRUPT.name, "item1");
-    menu1 = addStringNoLocale(menu1, SCHEMA_INRUPT.name, "item2");
-    myReadingList = setThing(myReadingList, menu1);
+    let menu = createThing({ name: "menu1" });
+    menu = addStringNoLocale(menu, `${chooseWellPrefix}menuname`, menuName);
+    menu = addStringNoLocale(menu, SCHEMA_INRUPT.name, menuDate);
+    
 
-    let item1 = createThing({ name: "item1" });
-    item1 = addStringNoLocale(item1, SCHEMA_INRUPT.name, "allergen1");
-    myReadingList = setThing(myReadingList, item1);
+    for (const item of items) {
+      menu = addUrl(menu, SCHEMA_INRUPT.name, `${podsUrls[0]}public/menus/my-menu1#${item.label}`);
+    }
 
-    let item2 = createThing({ name: "item2" });
-    item2 = addStringNoLocale(item2, SCHEMA_INRUPT.name, "allergen2");
-    myReadingList = setThing(myReadingList, item2);
+    myReadingList = setThing(myReadingList, menu);
+
+    for (const item of items) {
+      let menuItem = createThing({ name: item.label });
+      menuItem = addStringNoLocale(menuItem, SCHEMA_INRUPT.name, item.price);
+      menuItem = addStringNoLocale(menuItem, SCHEMA_INRUPT.name, item.ingredients[0]);
+      myReadingList = setThing(myReadingList, menuItem);
+    }
+    
 
     await saveSolidDatasetAt(
       readingListUrl,
       myReadingList,
       { fetch: session.fetch }
     );
+
+    alert('Menu saved');
   }
 
   function addNewItem() {
@@ -121,8 +131,6 @@ const Profile: React.FC = () => {
     });
 
     setItems(newItemArray);
-
-    alert(itemLabel + ' added to the menu.');
 
     // Clear fields
     setItemLabel("");
@@ -153,7 +161,7 @@ const Profile: React.FC = () => {
       {/* <button onClick={() => handleWrite()}>Write allergen to pod</button> */}
       <h2>Creating a new menu</h2>
       <input value={menuName} onChange={(e) => setMenuName(e.target.value)} placeholder='Name of the menu' />{' '}
-      <input placeholder='Date' />
+      <input type="date" placeholder='Date' />
       <br />
       <br />
       <h4>Add a new item</h4>
@@ -204,7 +212,7 @@ const Profile: React.FC = () => {
         )}
       </ul>
 
-      <button>Save the menu</button>
+      <button onClick={() => handleWrite()}>Save the menu</button>
       <br /><br />
 
       {/* <textarea value={textInput} onChange={(e) => setTextInput(e.target.value)} />
