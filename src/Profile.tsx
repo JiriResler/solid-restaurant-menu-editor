@@ -161,7 +161,7 @@ const Profile: React.FC = () => {
       {/* <button onClick={() => handleWrite()}>Write allergen to pod</button> */}
       <h2>Creating a new menu</h2>
       <input value={menuName} onChange={(e) => setMenuName(e.target.value)} placeholder='Name of the menu' />{' '}
-      <input type="date" placeholder='Date' />
+      <input type="date" value={menuDate} onChange={(e) => setMenuDate(e.target.value)} placeholder='Date' />
       <br />
       <br />
       <h4>Add a new item</h4>
@@ -190,6 +190,8 @@ const Profile: React.FC = () => {
       <br /><br />
 
       <h3>Preview of the menu</h3>
+      <h5>{menuName}</h5>
+      <h4>Date: {menuDate}</h4>
       <ul>
         {items.map(item =>
           <li>
