@@ -46,20 +46,15 @@ const Profile: React.FC = () => {
 
   const [items, setItems] = useState([]);
 
-  // const [item, setItem] = useState({
-  //   label: "",
-  //   ingredients: [],
-  //   allergens: [],
-  //   diets: []
-  // });
-
   const [menuName, setMenuName] = useState("");
   const [menuDate, setMenuDate] = useState("");
 
   const [itemLabel, setItemLabel] = useState("");
   const [itemIngredients, setItemIngredients] = useState([]);
   const [ingredient, setIngredient] = useState("");
+  const [allergen, setAllergen] = useState("");
   const [itemAllergens, setItemAllergens] = useState([]);
+  const [diet, setDiet] = useState("");
   const [itemDiets, setItemDiets] = useState([]);
   const [itemPrice, setItemPrice] = useState("");
 
@@ -86,23 +81,34 @@ const Profile: React.FC = () => {
     }
 
     let menu = createThing({ name: "menu1" });
-    menu = addStringNoLocale(menu, `${chooseWellPrefix}menuname`, menuName);
-    menu = addStringNoLocale(menu, SCHEMA_INRUPT.name, menuDate);
+    menu = addStringNoLocale(menu, `${chooseWellPrefix}menuName`, menuName);
+    menu = addStringNoLocale(menu, `${chooseWellPrefix}validOn`, menuDate);
     
 
     for (const item of items) {
-      menu = addUrl(menu, SCHEMA_INRUPT.name, `${podsUrls[0]}public/menus/my-menu1#${item.label}`);
+      menu = addUrl(menu, `${chooseWellPrefix}hasMenuItem`, `${podsUrls[0]}public/menus/my-menu1#${item.label}`);
     }
 
     myReadingList = setThing(myReadingList, menu);
 
     for (const item of items) {
       let menuItem = createThing({ name: item.label });
-      menuItem = addStringNoLocale(menuItem, SCHEMA_INRUPT.name, item.price);
-      menuItem = addStringNoLocale(menuItem, SCHEMA_INRUPT.name, item.ingredients[0]);
+      menuItem = addStringNoLocale(menuItem, `${chooseWellPrefix}costs`, item.price);
+      
+      for (const ingredient of item.ingredients) {
+        menuItem = addStringNoLocale(menuItem, `${chooseWellPrefix}hasIngredient`, ingredient);
+      }
+
+      for (const allergen of item.allergens) {
+        menuItem = addStringNoLocale(menuItem, `${chooseWellPrefix}hasAllergen`, allergen);
+      }
+
+      for (const diet of item.diets) {
+        menuItem = addStringNoLocale(menuItem, `${chooseWellPrefix}isPartOf`, diet);
+      }
+      
       myReadingList = setThing(myReadingList, menuItem);
     }
-    
 
     await saveSolidDatasetAt(
       readingListUrl,
@@ -120,13 +126,11 @@ const Profile: React.FC = () => {
       newItemArray.push(item);
     }
 
-    
-
     newItemArray.push({
       label: itemLabel,
-      ingredients: [itemIngredients],
-      allergens: [itemAllergens],
-      diets: [itemDiets],
+      ingredients: itemIngredients,
+      allergens: itemAllergens,
+      diets: itemDiets,
       price: itemPrice
     });
 
@@ -154,6 +158,34 @@ const Profile: React.FC = () => {
     setIngredient("");
   }
 
+  function addAllergen() {
+    let newAllergenArray = [];
+
+    for (const allergen of itemAllergens) {
+      newAllergenArray.push(allergen);
+    }
+
+    newAllergenArray.push(allergen);
+
+    setItemAllergens(newAllergenArray);
+
+    setAllergen("");
+  }
+
+  function addDiet() {
+    let newDietArray = [];
+
+    for (const diet of itemDiets) {
+      newDietArray.push(diet);
+    }
+
+    newDietArray.push(diet);
+
+    setItemDiets(newDietArray);
+
+    setDiet("");
+  }
+
   return (
     <>
       {/* <h1>Welcome to the Solid restaurant menu maker</h1> */}
@@ -177,7 +209,12 @@ const Profile: React.FC = () => {
           </ul>
         </li>
         <li>
-          <input value={itemAllergens} onChange={(e) => setItemAllergens(e.target.value)} placeholder='Allergens' />
+          <input value={allergen} onChange={(e) => setAllergen(e.target.value)} placeholder='Allergen name' />
+          {' '}
+          <button onClick={() => addAllergen()}>Add allergen</button>
+          <ul>
+            {itemAllergens.map(allergen => <li>{allergen}</li>)}
+          </ul>
         </li>
         <li>
           <input value={itemDiets} onChange={(e) => setItemDiets(e.target.value)} placeholder='Diets' />
